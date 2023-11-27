@@ -9,6 +9,9 @@
 <meta name="keywords" content="">
 <meta name="description" content="">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+
 <style type="text/css">
 html,body{
 	margin:0;
@@ -16,8 +19,7 @@ html,body{
 
 
 .movs{
-    
-    position: absolute;
+	position: absolute;
     left: 0;
     top: 0;
     width: 50%;
@@ -59,6 +61,13 @@ div.letter{
 }
 
 
+
+div.myBarChart{
+    position: absolute;
+    left: 50%;
+    width: 50%;
+}
+
 </style>
 <script>
 
@@ -86,13 +95,14 @@ function sizeChosei(){
 <video class="movs" id="movs" src='movs/iro4.mp4' autoplay muted></video>
     <p id="setumei" class="setumei">色相が等しい色の組み合わせの時、スライダの値を上げてください。</p>
 
-<input class="slide" id="slide" max="5" min="0" type="range" value="0" />
+<input class="slide" id="slide" max="1" min="0" type="range" value="0" step="0.1" />
 <div id="letter" class="letter">
     <p>スライダの値:<span class="range-value-result">0</span></p>
-    <p >現在の点数：<span class="score"></span>点/目標150点</p>
+    <p >現在の点数：<span class="score"></span>点</p>
 </div>
-
-
+<div class="myBarChart">
+<canvas id="myBarChart"></canvas>
+</div>
     <script>
 
 
@@ -111,7 +121,9 @@ var range;
 
 
 var a; 
-var sum = 0;
+var sum1 = 0;
+var sum2 = 0;
+var sum3 = 0;
 var goukei;
 
   const countUp = () => {
@@ -121,34 +133,83 @@ var goukei;
 
 if (0 <= videoElem.currentTime && videoElem.currentTime <= 9 ){
 
- sum -= Number(a) *3 ;
+ sum1 -= Number(a) ;
+ sum2 += Number(a) ;
+ sum3 += Number(a) ;
+
     
 }
 
  else if (9 < videoElem.currentTime && videoElem.currentTime <= 29) {
- sum += Number(a)
+ sum1 += Number(a)
+ sum2 -= Number(a) ;
+ sum3 -= Number(a) ;
+
  }
 
 else if (29 < videoElem.currentTime && videoElem.currentTime <= 49) {
- sum -= Number(a) *3
+ sum1 -= Number(a) ;
+ sum2 += Number(a) ;
+ sum3 -= Number(a) ;
+
  }
 
 
 
 
 console.log("a: " +a);
- console.log("sum: "+ sum);
+ console.log("sum: "+ sum1);
 
-$(".score").text(String(sum))
+$(".score").text(String(sum1)) //点数
+
+
+
+
+
+var ctx = document.getElementById("myBarChart");
+  var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['色相','明度','彩度'],
+      datasets: [
+        {
+          label: '',
+          data: [sum1, sum2, sum3],
+          backgroundColor: "rgba(219,39,91,0.5)"
+        }
+      ]
+    },
+    options: {
+        animation: {
+        duration: 0
+    },
+      title: {
+        display: true,
+        text: '満たされ度'
+      },
+      scales: {
+
+        yAxes: [{
+          ticks: {
+            suggestedMax: 200,
+            suggestedMin: -200,
+            stepSize: 50,
+            callback: function(value, index, values){
+              return  value +  '点'
+            }
+          }
+        }]
+      },
+    }
+  }); 
+
+
 
   }
 
+setInterval(countUp, 100);
 
 
-
-
-
-setInterval(countUp, 500);
 
 
 
@@ -158,5 +219,9 @@ setInterval(countUp, 500);
 
 
 
+
+
 </body>
 </html>
+
+
