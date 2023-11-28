@@ -19,7 +19,8 @@ html,body{
 
 
 .movs{
-	position: absolute;
+    
+    position: absolute;
     left: 0;
     top: 0;
     width: 50%;
@@ -31,7 +32,7 @@ input.slide{
 position: absolute;
     left: 0;
     bottom: 20%;
-    width: 80%; 
+    width: 50%; 
 height: 50px;
 background: #575757;
 border-radius: 0%; 
@@ -56,8 +57,9 @@ p.setumei{
 
 div.letter{
     position: absolute;
-    font-size: 20pt;
+    font-size: 16pt;
     bottom: 0;
+    line-height: 0.5em;
 }
 
 
@@ -66,6 +68,7 @@ div.myBarChart{
     position: absolute;
     left: 50%;
     width: 50%;
+    height: 50%;
 }
 
 </style>
@@ -92,13 +95,16 @@ function sizeChosei(){
 </head>
 <body>
 
-<video class="movs" id="movs" src='movs/iro4.mp4' autoplay muted></video>
-    <p id="setumei" class="setumei">色相が等しい色の組み合わせの時、スライダの値を上げてください。</p>
+<video class="movs" id="movs" src='movs/iro6.mp4' autoplay muted></video>
+    <p id="setumei" class="setumei">「同じ色相」のメーターを100以上に、「同じ明度」のメーターを50以上にしてください。</p>
 
 <input class="slide" id="slide" max="1" min="0" type="range" value="0" step="0.1" />
 <div id="letter" class="letter">
     <p>スライダの値:<span class="range-value-result">0</span></p>
-    <p >現在の点数：<span class="score"></span>点</p>
+    <p>同じ色相：<span class="score1"></span>点</p>
+    <p>同じ明度：<span class="score2"></span>点</p>
+    <p>同じ彩度：<span class="score3"></span>点</p>
+
 </div>
 <div class="myBarChart">
 <canvas id="myBarChart"></canvas>
@@ -155,12 +161,22 @@ else if (29 < videoElem.currentTime && videoElem.currentTime <= 49) {
  }
 
 
+ else if (49 < videoElem.currentTime && videoElem.currentTime <= 70) {
+ sum1 += Number(a) ;
+ sum2 += Number(a) ;
+ sum3 -= Number(a) ;
+
+ }
+
+
 
 
 console.log("a: " +a);
  console.log("sum: "+ sum1);
 
-$(".score").text(String(sum1)) //点数
+$(".score1").text(String(sum1)) //点数
+$(".score2").text(String(sum2)) //点数
+$(".score3").text(String(sum3)) //点数
 
 
 
@@ -170,7 +186,7 @@ var ctx = document.getElementById("myBarChart");
   var myBarChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['色相','明度','彩度'],
+      labels: ['同じ色相','同じ明度','彩度'],
       datasets: [
         {
           label: '',
@@ -185,7 +201,7 @@ var ctx = document.getElementById("myBarChart");
     },
       title: {
         display: true,
-        text: '満たされ度'
+        text: '色の組み合わせ'
       },
       scales: {
 
@@ -206,6 +222,11 @@ var ctx = document.getElementById("myBarChart");
 
 
   }
+
+
+
+
+
 
 setInterval(countUp, 100);
 
